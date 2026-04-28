@@ -10,9 +10,15 @@ import { useForm, FormProvider } from "react-hook-form";
 export default function FormElements() {
   const methods = useForm();
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: any, event?: any) => {
+    const action = (event?.nativeEvent as HTMLFormElement)?.submitter?.value;
+    data.action = action;
     console.log("FINAL DATA:", data);
-    // call backend API here
+    if (action === "draft") {
+      console.log("Saving as draft", data);
+    } else {
+      console.log("Publishing product", data);
+    }
   };
 
   return (
@@ -42,13 +48,28 @@ export default function FormElements() {
               <DropzoneComponent />
             </div>
           </div>
-          {/* 🔥 Submit Button */}
-          <div className="mt-6 flex justify-end">
+
+          <div
+            className="mt-6
+           flex justify-end"
+          >
             <button
               type="submit"
-              className="px-6 py-3 bg-brand-500 text-white rounded-lg"
+              className="px-6 py-3 bg-brand-900 text-white rounded-lg mr-4"
+              name="action"
+              value="draft"
+              disabled={methods.formState.isSubmitting}
             >
-              Submit Product
+              Draft Product
+            </button>
+            <button
+              type="submit"
+              className="px-6 py-3 bg-brand-700 text-white rounded-lg "
+              name="action"
+              value="publish"
+              disabled={methods.formState.isSubmitting}
+            >
+              Add Product
             </button>
           </div>
         </form>
