@@ -16,7 +16,6 @@ export default function FormElements() {
     console.log("FINAL ADD PRODUCT FORM DATA:", data);
   };
 
-
   return (
     <div>
       <FormProvider {...methods}>
@@ -51,7 +50,11 @@ export default function FormElements() {
           >
             <button
               type="submit"
-              className="px-6 py-3 bg-brand-900 text-white rounded-lg mr-4"
+               className="px-6 py-3 bg-brand-900 text-white rounded-lg
+              transition-all duration-200 ease-in-out
+              hover:bg-brand-800 hover:shadow-lg hover:-translate-y-0.5
+              active:scale-95
+              disabled:opacity-50 disabled:cursor-not-allowed mr-4"
               name="action"
               value="draft"
               disabled={methods.formState.isSubmitting}
@@ -60,7 +63,11 @@ export default function FormElements() {
             </button>
             <button
               type="submit"
-              className="px-6 py-3 bg-brand-700 text-white rounded-lg "
+              className="px-6 py-3 bg-brand-700 text-white rounded-lg
+              transition-all duration-200 ease-in-out
+              hover:bg-brand-600 hover:shadow-lg hover:-translate-y-0.5
+              active:scale-95
+              disabled:opacity-50 disabled:cursor-not-allowed"
               name="action"
               value="publish"
               disabled={methods.formState.isSubmitting}
