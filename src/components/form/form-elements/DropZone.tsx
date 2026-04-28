@@ -1,6 +1,8 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
+import { useEffect } from "react";
+import { useFormContext } from "react-hook-form";
 
 import {
   DndContext,
@@ -102,6 +104,7 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
         src={image}
         onClick={() => openEditor(index)}
         className="w-full h-32 object-cover rounded-lg cursor-pointer"
+        alt={`Uploaded ${index + 1}`}
       />
 
       {/* Drag Handle */}
@@ -139,6 +142,27 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
 /* -- Main Component -- */
 const DropzoneComponent = () => {
   const [images, setImages] = useState<string[]>([]);
+
+  const {
+    setValue,
+    register,
+    formState: { errors },
+  } = useFormContext();
+
+  useEffect(() => {
+    register("productImages", {
+      validate: (value) =>
+        (value && value.length > 0) || "At least one image is required",
+    });
+  }, [register]);
+
+  useEffect(() => {
+    setValue("productImages", images, {
+      shouldValidate: true,
+      shouldDirty: true,
+    });
+  }, [images, setValue]);
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor));
@@ -255,6 +279,7 @@ const DropzoneComponent = () => {
                 value={zoom}
                 onChange={(e) => setZoom(Number(e.target.value))}
                 className="w-full"
+                title="Zoom"
               />
             </div>
 
@@ -268,6 +293,7 @@ const DropzoneComponent = () => {
                 value={rotation}
                 onChange={(e) => setRotation(Number(e.target.value))}
                 className="w-full"
+                title="Rotation"
               />
             </div>
           </div>
@@ -311,6 +337,11 @@ const DropzoneComponent = () => {
       </div>
       {error && (
         <p className="text-red-500 text-sm mt-2 text-center">{error}</p>
+      )}
+      {errors.productImages && (
+        <p className="text-red-500 text-sm mt-2 text-center">
+          {errors.productImages.message as string}
+        </p>
       )}
       {/* Preview */}
       {images.length > 0 && (

@@ -16,6 +16,7 @@ export default function FormElements() {
     console.log("FINAL ADD PRODUCT FORM DATA:", data);
   };
 
+
   return (
     <div>
       <FormProvider {...methods}>

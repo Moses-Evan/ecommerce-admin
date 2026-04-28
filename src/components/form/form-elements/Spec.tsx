@@ -13,9 +13,6 @@ export default function Spec() {
     { value: "silk", label: "Silk" },
     { value: "cotton", label: "Cotton" },
   ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
