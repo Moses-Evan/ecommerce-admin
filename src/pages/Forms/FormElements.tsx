@@ -1,5 +1,7 @@
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import DefaultInputs from "../../components/form/form-elements/DefaultInputs";
+import BasicDetails from "../../components/form/form-elements/BasicDetails";
+import Spec from "../../components/form/form-elements/Spec";
+import PriceInventory from "../../components/form/form-elements/PriceInventory";
 import InputGroup from "../../components/form/form-elements/InputGroup";
 import DropzoneComponent from "../../components/form/form-elements/DropZone";
 import CheckboxComponents from "../../components/form/form-elements/CheckboxComponents";
@@ -18,20 +20,22 @@ export default function FormElements() {
         title="React.js Form Elements Dashboard | TailAdmin - React.js Admin Dashboard Template"
         description="This is React.js Form Elements  Dashboard page for TailAdmin - React.js Tailwind CSS Admin Dashboard Template"
       />
-      <PageBreadcrumb pageTitle="Form Elements" />
+      <PageBreadcrumb pageTitle="Add a Product" />
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="space-y-6">
-          <DefaultInputs />
-          <SelectInputs />
+          <BasicDetails />
           <TextAreaInput />
-          <InputStates />
+          <Spec />
+          {/* <SelectInputs /> */}
+          {/* <InputStates /> */}
         </div>
         <div className="space-y-6">
-          <InputGroup />
-          <FileInputExample />
-          <CheckboxComponents />
-          <RadioButtons />
-          <ToggleSwitch />
+          <PriceInventory />
+          {/* <InputGroup /> */}
+          {/* <FileInputExample /> */}
+          {/* <CheckboxComponents /> */}
+          {/* <RadioButtons /> */}
+          {/* <ToggleSwitch /> */}
           <DropzoneComponent />
         </div>
       </div>

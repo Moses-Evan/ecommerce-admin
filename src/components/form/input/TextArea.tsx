@@ -12,7 +12,7 @@ interface TextareaProps {
 }
 
 const TextArea: React.FC<TextareaProps> = ({
-  placeholder = "Enter your message", // Default placeholder
+  placeholder = "Ex: Elegant and breathable, the Kora silk cotton saree blends the soft sheen of silk with the comfort of cotton. Perfect for everyday grace or subtle festive charm.", // Default placeholder
   rows = 3, // Default number of rows
   value = "", // Default value
   onChange, // Callback for changes

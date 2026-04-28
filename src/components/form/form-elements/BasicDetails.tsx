@@ -6,7 +6,7 @@ import Select from "../Select";
 import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons";
 import DatePicker from "../date-picker.tsx";
 
-export default function DefaultInputs() {
+export default function BasicDetails() {
   const [showPassword, setShowPassword] = useState(false);
   const options = [
     { value: "marketing", label: "Marketing" },
@@ -18,26 +18,22 @@ export default function DefaultInputs() {
   };
 
   return (
-    <ComponentCard title="Default Inputs">
+    <ComponentCard title="Basic Details">
       <div className="space-y-6">
         <div>
-          <Label htmlFor="input">Input</Label>
-          <Input type="text" id="input" />
+          <Label htmlFor="input">Product Name</Label>
+          <Input type="text" id="productName" />
         </div>
         <div>
-          <Label htmlFor="inputTwo">Input with Placeholder</Label>
-          <Input type="text" id="inputTwo" placeholder="info@gmail.com" />
+          <Label htmlFor="input">SKU</Label>
+          <Input type="text" id="sku" />
         </div>
         <div>
-          <Label>Select Input</Label>
-          <Select
-            options={options}
-            placeholder="Select an option"
-            onChange={handleSelectChange}
-            className="dark:bg-dark-900"
-          />
+          <Label htmlFor="input">Brand</Label>
+          <Input type="text" id="brand" />
         </div>
-        <div>
+       
+        {/* <div>
           <Label>Password Input</Label>
           <div className="relative">
             <Input
@@ -55,9 +51,9 @@ export default function DefaultInputs() {
               )}
             </button>
           </div>
-        </div>
+        </div> */}
 
-        <div>
+        {/* <div>
           <DatePicker
             id="date-picker"
             label="Date Picker Input"
@@ -82,8 +78,8 @@ export default function DefaultInputs() {
               <TimeIcon className="size-6" />
             </span>
           </div>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <Label htmlFor="tm">Input with Payment</Label>
           <div className="relative">
             <Input
@@ -108,7 +104,7 @@ export default function DefaultInputs() {
               </svg>
             </span>
           </div>
-        </div>
+        </div> */}
       </div>
     </ComponentCard>
   );
