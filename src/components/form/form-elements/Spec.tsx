@@ -100,15 +100,31 @@ export default function Spec() {
 
         <div className="space-y-6">
           <div>
-            <MultiSelect
-              label="Occasion"
-              options={multiOptions}
-              defaultSelected={["casual", "traditional"]}
-              onChange={(values) => setSelectedValues(values)}
+            <Controller
+              name="productOccasion"
+              control={control}
+              rules={{
+                validate: (value) =>
+                  (value && value.length > 0) || "Select at least one occasion",
+              }}
+              render={({ field, fieldState }) => (
+                <>
+                  <MultiSelect
+                    label="Occasion"
+                    options={multiOptions}
+                    value={field.value || []} // ✅ controlled by RHF
+                    onChange={field.onChange} // ✅ sync with form
+                  />
+
+                  {/* Error */}
+                  {fieldState.error && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </>
+              )}
             />
-            <p className="sr-only">
-              Selected Values: {selectedValues.join(", ")}
-            </p>
           </div>
         </div>
 

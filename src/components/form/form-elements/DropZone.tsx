@@ -158,7 +158,6 @@ const DropzoneComponent = () => {
 
   useEffect(() => {
     setValue("productImages", images, {
-      shouldValidate: true,
       shouldDirty: true,
     });
   }, [images, setValue]);
