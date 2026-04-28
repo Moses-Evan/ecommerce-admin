@@ -4,6 +4,7 @@ import Label from "../Label";
 import Input from "../input/InputField";
 import Select from "../Select";
 import MultiSelect from "../MultiSelect";
+import { Controller, useFormContext } from "react-hook-form";
 
 export default function Spec() {
   const [color, setColor] = useState<string>("#4169E1");
@@ -26,23 +27,54 @@ export default function Spec() {
     { value: "casual", text: "Casual", selected: false },
   ];
 
+  const {
+    register,
+    formState: { errors },
+    control,
+  } = useFormContext();
+
   return (
     <ComponentCard title="Specifications">
       <div className="space-y-6">
         <div>
           <Label>Select Fabric Type</Label>
-          <Select
-            options={options}
-            placeholder="Select an option"
-            onChange={handleSelectChange}
-            className="dark:bg-dark-900"
+
+          <Controller
+            name="productFabricType"
+            control={control}
+            rules={{ required: "Fabric type is required" }}
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  options={options}
+                  placeholder="Select an option"
+                  value={field.value || ""} // ✅ important
+                  onChange={field.onChange}
+                  className="dark:bg-dark-900"
+                />
+
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
+            )}
           />
         </div>
-
         <div>
-          <Label htmlFor="color">Color</Label>
+          <Label htmlFor="productColor">Color</Label>
           <div className="flex gap-3 items-center">
-            <Input type="text" id="color" placeholder="Ex: Royal Blue, Pink" />
+            <Input
+              type="text"
+              id="productColor"
+              placeholder="Ex: Royal Blue, Pink"
+              {...register("productColor", {
+                required: "Product color is required",
+              })}
+              error={!!errors.productColor}
+              hint={errors.productColor?.message as string}
+            />
             <Input
               type="text"
               id="color"

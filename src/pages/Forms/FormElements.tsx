@@ -13,12 +13,7 @@ export default function FormElements() {
   const onSubmit = (data: any, event?: any) => {
     const action = (event?.nativeEvent as HTMLFormElement)?.submitter?.value;
     data.action = action;
-    console.log("FINAL DATA:", data);
-    if (action === "draft") {
-      console.log("Saving as draft", data);
-    } else {
-      console.log("Publishing product", data);
-    }
+    console.log("FINAL ADD PRODUCT FORM DATA:", data);
   };
 
   return (

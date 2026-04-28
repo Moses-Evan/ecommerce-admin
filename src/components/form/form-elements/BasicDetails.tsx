@@ -29,12 +29,12 @@ export default function BasicDetails() {
           <Label htmlFor="sku">SKU</Label>
           <Input
             type="text"
-            id="sku"
-            {...register("sku", {
+            id="productSku"
+            {...register("productSku", {
               required: "SKU is required",
             })}
-            error={!!errors.sku}
-            hint={errors.sku?.message as string}
+            error={!!errors.productSku}
+            hint={errors.productSku?.message as string}
           />
         </div>
 
@@ -42,12 +42,12 @@ export default function BasicDetails() {
           <Label htmlFor="brand">Brand</Label>
           <Input
             type="text"
-            id="brand"
-            {...register("brand", {
+            id="productBrand"
+            {...register("productBrand", {
               required: "Brand is required",
             })}
-            error={!!errors.brand}
-            hint={errors.brand?.message as string}
+            error={!!errors.productBrand}
+            hint={errors.productBrand?.message as string}
           />
         </div>
       </div>

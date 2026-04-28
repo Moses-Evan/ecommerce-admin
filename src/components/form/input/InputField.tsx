@@ -9,14 +9,16 @@ interface InputProps {
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
 
-  min?: string | number; // ✅ FIXED
-  max?: string | number; // ✅ FIXED
+  min?: string | number;
+  max?: string | number;
 
   step?: number;
   disabled?: boolean;
   success?: boolean;
   error?: boolean;
   hint?: string;
+
+  inputmode?:string
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -26,6 +28,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       id,
       name,
       placeholder,
+      inputmode,
       value,
       onChange,
       className = "",
@@ -36,7 +39,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       success = false,
       error = false,
       hint,
-      ...rest // 🔥 important
+      ...rest
     },
     ref,
   ) => {
@@ -55,7 +58,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="relative">
         <input
-          ref={ref} // ✅ CRITICAL
+          ref={ref} //CRITICAL
           type={type}
           id={id}
           name={name}
@@ -67,7 +70,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           step={step}
           disabled={disabled}
           className={inputClasses}
-          {...rest} // ✅ allows register() to inject props
+          {...rest} //allows register() to inject props
         />
 
         {hint && (

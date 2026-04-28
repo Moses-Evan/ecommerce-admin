@@ -12,14 +12,14 @@ interface TextareaProps {
 }
 
 const TextArea: React.FC<TextareaProps> = ({
-  placeholder = "Ex: Elegant and breathable, the Kora silk cotton saree blends the soft sheen of silk with the comfort of cotton. Perfect for everyday grace or subtle festive charm.", // Default placeholder
+  placeholder, // Default placeholder
   rows = 3, // Default number of rows
   value = "", // Default value
   onChange, // Callback for changes
   className = "", // Additional custom styles
   disabled = false, // Disabled state
-  error = false, // Error state
-  hint = "", // Default hint text
+  error, // Error state
+  hint, // Default hint text
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     if (onChange) {

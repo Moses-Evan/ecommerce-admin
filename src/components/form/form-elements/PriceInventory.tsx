@@ -1,38 +1,62 @@
-import { useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Input from "../input/InputField";
-import Select from "../Select";
-import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons";
-import DatePicker from "../date-picker.tsx";
+
+import { useFormContext } from "react-hook-form";
 
 export default function PriceInventory() {
-  const [showPassword, setShowPassword] = useState(false);
-  const options = [
-    { value: "marketing", label: "Marketing" },
-    { value: "template", label: "Template" },
-    { value: "development", label: "Development" },
-  ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
 
   return (
     <ComponentCard title="Pricing & Inventory">
       <div className="space-y-6">
         <div>
           <Label htmlFor="input">MRP</Label>
-          <Input type="number" id="mrp" inputmode="numeric" min="0"/>
+          <Input
+            type="number"
+            id="productMrp"
+            inputmode="numeric"
+            min="0"
+            {...register("productMrp", {
+              required: "MRP is required",
+            })}
+            error={!!errors.productMrp}
+            hint={errors.productMrp?.message as string}
+          />
         </div>
         <div>
           <Label htmlFor="input">Selling Price</Label>
-          <Input type="number" id="sellingPrice" inputmode="numeric" min="0"/>
+          <Input
+            type="number"
+            id="productSellingPrice"
+            inputmode="numeric"
+            min="0"
+            {...register("productSellingPrice", {
+              required: "Selling price is required",
+            })}
+            error={!!errors.productSellingPrice}
+            hint={errors.productSellingPrice?.message as string}
+          />
         </div>
         <div>
           <Label htmlFor="input">Stock</Label>
-          <Input type="number" id="brand" placeholder="0 - No Stock" inputmode="numeric" min="0"/>
+          <Input
+            type="number"
+            id="productStock"
+            placeholder="0 - No Stock"
+            inputmode="numeric"
+            min="0"
+            {...register("productStock", {
+              required: "Stock is required",
+            })}
+            error={!!errors.productStock}
+            hint={errors.productStock?.message as string}
+          />
         </div>
-       
+
         {/* <div>
           <Label>Password Input</Label>
           <div className="relative">
