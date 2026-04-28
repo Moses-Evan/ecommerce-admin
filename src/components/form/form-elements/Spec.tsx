@@ -3,22 +3,18 @@ import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Input from "../input/InputField";
 import Select from "../Select";
-import { EyeCloseIcon, EyeIcon, TimeIcon } from "../../../icons";
-import DatePicker from "../date-picker.tsx";
 import MultiSelect from "../MultiSelect";
 
 export default function Spec() {
+  const [color, setColor] = useState<string>("#4169E1");
 
   const options = [
     { value: "silk", label: "Silk" },
     { value: "cotton", label: "Cotton" },
-   
   ];
   const handleSelectChange = (value: string) => {
     console.log("Selected value:", value);
   };
-
-
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
 
@@ -33,7 +29,6 @@ export default function Spec() {
   return (
     <ComponentCard title="Specifications">
       <div className="space-y-6">
-       
         <div>
           <Label>Select Fabric Type</Label>
           <Select
@@ -45,26 +40,48 @@ export default function Spec() {
         </div>
 
         <div>
-          
-          <Label htmlFor="inputTwo">Color</Label>
-          <Input type="text" id="color" placeholder="Ex: Royal Blue, Pink" />
+          <Label htmlFor="color">Color</Label>
+          <div className="flex gap-3 items-center">
+            <Input type="text" id="color" placeholder="Ex: Royal Blue, Pink" />
+            <Input
+              type="text"
+              id="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+            />
+
+            <div className="relative inline-block">
+              <input
+                type="color"
+                id="colorPicker"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="absolute opacity-0 w-12 h-12 cursor-pointer"
+                placeholder="Select Color"
+              />
+
+              <label
+                htmlFor="colorPicker"
+                className="h-12 w-12 rounded-full border cursor-pointer block"
+                style={{ backgroundColor: color }}
+              ></label>
+            </div>
+          </div>
         </div>
 
- <div className="space-y-6">
-        
-        <div>
-          <MultiSelect
-            label="Occasion"
-            options={multiOptions}
-            defaultSelected={["casual", "traditional"]}
-            onChange={(values) => setSelectedValues(values)}
-          />
-          <p className="sr-only">
-            Selected Values: {selectedValues.join(", ")}
-          </p>
+        <div className="space-y-6">
+          <div>
+            <MultiSelect
+              label="Occasion"
+              options={multiOptions}
+              defaultSelected={["casual", "traditional"]}
+              onChange={(values) => setSelectedValues(values)}
+            />
+            <p className="sr-only">
+              Selected Values: {selectedValues.join(", ")}
+            </p>
+          </div>
         </div>
-      </div>
-
 
         {/* <div>
           <Label>Password Input</Label>
