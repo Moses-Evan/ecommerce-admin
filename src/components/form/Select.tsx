@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 interface Option {
   value: string;
   label: string;
@@ -34,6 +32,7 @@ const Select: React.FC<SelectProps> = ({
       } ${className}`}
       value={value} // ✅ controlled by RHF
       onChange={handleChange}
+      title="Select an option"
     >
       <option
         value=""
