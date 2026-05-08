@@ -6,14 +6,35 @@ import DropzoneComponent from "../../components/form/form-elements/DropZone";
 import TextAreaInput from "../../components/form/form-elements/TextAreaInput";
 import PageMeta from "../../components/common/PageMeta";
 import { useForm, FormProvider } from "react-hook-form";
+import { createProduct } from "../../services/productService";
 
 export default function FormElements() {
   const methods = useForm();
 
-  const onSubmit = (data: any, event?: any) => {
-    const action = (event?.nativeEvent as HTMLFormElement)?.submitter?.value;
-    data.action = action;
-    console.log("FINAL ADD PRODUCT FORM DATA:", data);
+  const onSubmit = async (data: any, event?: any) => {
+    try {
+      const action = (event?.nativeEvent as SubmitEvent)
+        ?.submitter as HTMLButtonElement;
+
+      data.action = action?.value;
+
+      console.log("FINAL ADD PRODUCT FORM DATA:", data);
+
+      const result = await createProduct(data);
+
+      console.log("SUCCESS:", result);
+
+      alert(result);
+
+      methods.reset();
+    } catch (error: any) {
+      console.error("ERROR:", error);
+
+      alert(
+        error?.response?.data?.message ||
+          "Something went wrong while adding the product.",
+      );
+    }
   };
 
   return (
@@ -50,7 +71,7 @@ export default function FormElements() {
           >
             <button
               type="submit"
-               className="px-6 py-3 bg-brand-900 text-white rounded-lg
+              className="px-6 py-3 bg-brand-900 text-white rounded-lg
               transition-all duration-200 ease-in-out
               hover:bg-brand-800 hover:shadow-lg hover:-translate-y-0.5
               active:scale-95
