@@ -29,12 +29,15 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-     path: "/",
+    path: "/",
   },
   {
     name: "Products",
     icon: <ListIcon />,
-    subItems: [{ name: "Add Product", path: "/form-elements", pro: false }],
+    subItems: [
+      { name: "Add Product", path: "/form-elements", pro: false },
+      { name: "Edit Product", path: "/form-elements-edit", pro: false },
+    ],
   },
   {
     icon: <CalenderIcon />,
@@ -101,14 +104,14 @@ const AppSidebar: React.FC = () => {
     index: number;
   } | null>(null);
   const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
-    {}
+    {},
   );
   const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   // const isActive = (path: string) => location.pathname === path;
   const isActive = useCallback(
     (path: string) => location.pathname === path,
-    [location.pathname]
+    [location.pathname],
   );
 
   useEffect(() => {
@@ -290,8 +293,8 @@ const AppSidebar: React.FC = () => {
           isExpanded || isMobileOpen
             ? "w-[290px]"
             : isHovered
-            ? "w-[290px]"
-            : "w-[90px]"
+              ? "w-[290px]"
+              : "w-[90px]"
         }
         ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0`}
@@ -308,22 +311,22 @@ const AppSidebar: React.FC = () => {
             <>
               <img
                 className="dark:hidden"
-                src="/images/logo/logo.svg"
+                src="/images/logo/logo-icon.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={90}
+                height={30}
               />
               <img
                 className="hidden dark:block"
-                src="/images/logo/logo-dark.svg"
+                src="/images/logo/logo-icon.png"
                 alt="Logo"
-                width={150}
-                height={40}
+                width={90}
+                height={30}
               />
             </>
           ) : (
             <img
-              src="/images/logo/logo-icon.svg"
+              src="/images/logo/logo-icon.png"
               alt="Logo"
               width={32}
               height={32}

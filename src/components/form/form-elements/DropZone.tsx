@@ -54,18 +54,20 @@ const getCroppedImage = async (
   await new Promise((res) => (image.onload = res));
 
   const canvas = document.createElement("canvas");
-  const size = 1000;
 
-  canvas.width = size;
-  canvas.height = size;
+  const width = 1200;
+  const height = 1600;
+
+  canvas.width = width;
+  canvas.height = height;
 
   const ctx = canvas.getContext("2d");
 
   // center + rotate
-  ctx?.translate(size / 2, size / 2);
+  ctx?.translate(width / 2, height / 2);
   ctx?.rotate((rotation * Math.PI) / 180);
   ctx?.scale(zoom, zoom); // 🔥 ensures fill after rotation
-  ctx?.translate(-size / 2, -size / 2);
+  ctx?.translate(-width / 2, -height / 2);
 
   ctx?.drawImage(
     image,
@@ -75,8 +77,8 @@ const getCroppedImage = async (
     crop.height,
     0,
     0,
-    size,
-    size,
+    width,
+    height,
   );
 
   return canvas.toDataURL("image/webp", 0.9);
@@ -103,7 +105,7 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
       <img
         src={image}
         onClick={() => openEditor(index)}
-        className="w-full h-32 object-cover rounded-lg cursor-pointer"
+        className="w-full aspect-[3/4] object-cover rounded-lg cursor-pointer"
         alt={`Uploaded ${index + 1}`}
       />
 
@@ -117,6 +119,7 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
 
       {/* Single click remove */}
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           removeImage(index);
@@ -242,7 +245,7 @@ const DropzoneComponent = () => {
               crop={crop}
               zoom={zoom}
               rotation={rotation}
-              aspect={1}
+              aspect={3 / 4}
               onCropChange={setCrop}
               onZoomChange={setZoom}
               onRotationChange={setRotation}
@@ -253,12 +256,14 @@ const DropzoneComponent = () => {
           {/* Rotate Buttons */}
           <div className="flex justify-center gap-4 mt-3">
             <button
+              type="button"
               onClick={() => setRotation((prev) => prev - 90)}
               className="px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded"
             >
               ↺ 90°
             </button>
             <button
+              type="button"
               onClick={() => setRotation((prev) => prev + 90)}
               className="px-3 py-2 bg-gray-200 dark:bg-gray-700 rounded"
             >
@@ -300,12 +305,14 @@ const DropzoneComponent = () => {
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
             <button
+              type="button"
               onClick={() => setEditingIndex(null)}
               className="w-full py-2 bg-gray-300 rounded"
             >
               Cancel
             </button>
             <button
+              type="button"
               onClick={saveEdit}
               className="w-full py-2 bg-brand-500 text-white rounded"
             >
@@ -354,7 +361,7 @@ const DropzoneComponent = () => {
               items={images.map((_, i) => i)}
               strategy={rectSortingStrategy}
             >
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                 {images.map((img, index) => (
                   <SortableItem
                     key={index}
