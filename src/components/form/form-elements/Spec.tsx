@@ -74,7 +74,7 @@ export default function Spec() {
             />
             <Input
               type="text"
-              id="color"
+              id="productColorCode"
               value={color}
               onChange={(e) => setColor(e.target.value)}
             />
@@ -82,7 +82,7 @@ export default function Spec() {
             <div className="relative inline-block">
               <input
                 type="color"
-                id="colorPicker"
+                id="productColorCode"
                 value={color}
                 onChange={(e) => setColor(e.target.value)}
                 className="absolute opacity-0 w-12 h-12 cursor-pointer"
@@ -90,7 +90,7 @@ export default function Spec() {
               />
 
               <label
-                htmlFor="colorPicker"
+                htmlFor="productColorCode"
                 className="h-12 w-12 rounded-full border cursor-pointer block"
                 style={{ backgroundColor: color }}
               ></label>
