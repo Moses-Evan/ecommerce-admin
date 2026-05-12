@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
     path: "/",
   },
   {
-    name: "Products",
+    name: "AProducts",
     icon: <ListIcon />,
     subItems: [
       { name: "Add Product", path: "/form-elements", pro: false },

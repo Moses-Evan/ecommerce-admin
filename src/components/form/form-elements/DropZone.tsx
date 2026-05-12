@@ -3,6 +3,7 @@ import ComponentCard from "../../common/ComponentCard";
 import { useDropzone } from "react-dropzone";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { uploadProductImages } from "../../../services/productService";
 
 import {
   DndContext,
@@ -21,6 +22,26 @@ import {
 
 import { CSS } from "@dnd-kit/utilities";
 import Cropper from "react-easy-crop";
+
+const dataURLtoFile = (dataurl: string, filename: string) => {
+  const arr = dataurl.split(",");
+
+  const mime = arr[0].match(/:(.*?);/)?.[1];
+
+  const bstr = atob(arr[1]);
+
+  let n = bstr.length;
+
+  const u8arr = new Uint8Array(n);
+
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n);
+  }
+
+  return new File([u8arr], filename, {
+    type: mime,
+  });
+};
 
 /* -- WebP Conversion -- */
 const convertToWebP = (file: File): Promise<string> => {
@@ -103,7 +124,7 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
     >
       {/* Image */}
       <img
-        src={image}
+        src={image.preview}
         onClick={() => openEditor(index)}
         className="w-full aspect-[3/4] object-cover rounded-lg cursor-pointer"
         alt={`Uploaded ${index + 1}`}
@@ -144,7 +165,14 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
 
 /* -- Main Component -- */
 const DropzoneComponent = () => {
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<
+    {
+      preview: string;
+      file: File;
+    }[]
+  >([]);
+
+  const [uploading, setUploading] = useState(false);
 
   const {
     setValue,
@@ -159,23 +187,22 @@ const DropzoneComponent = () => {
     });
   }, [register]);
 
-  useEffect(() => {
-    setValue("productImages", images, {
-      shouldDirty: true,
-    });
-  }, [images, setValue]);
+  // useEffect(() => {
+  //   setValue("productImages", images, {
+  //     shouldDirty: true,
+  //   });
+  // }, [images, setValue]);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
   const [error, setError] = useState("");
-
   const onDrop = async (files: File[]) => {
     const invalid = files.filter((f) => !f.type.startsWith("image/"));
 
     if (invalid.length > 0) {
-      setError("Only image files (PNG, JPG, WEBP) are allowed.");
+      setError("Only image files are allowed.");
     } else {
       setError("");
     }
@@ -183,7 +210,21 @@ const DropzoneComponent = () => {
     const valid = files.filter((f) => f.type.startsWith("image/"));
 
     const converted = await Promise.all(
-      valid.map((file) => convertToWebP(file)),
+      valid.map(async (file, index) => {
+        // convert to webp base64
+        const webpBase64 = await convertToWebP(file);
+
+        // convert base64 -> file
+        const webpFile = dataURLtoFile(
+          webpBase64,
+          `product_${Date.now()}_${index}.webp`,
+        );
+
+        return {
+          preview: webpBase64,
+          file: webpFile,
+        };
+      }),
     );
 
     setImages((prev) => [...prev, ...converted]);
@@ -205,8 +246,40 @@ const DropzoneComponent = () => {
 
   const handleDragEnd = (event: any) => {
     const { active, over } = event;
+
+    if (!over) return;
+
     if (active.id !== over.id) {
       setImages((items) => arrayMove(items, active.id, over.id));
+    }
+  };
+
+  const uploadImages = async () => {
+    try {
+      if (images.length === 0) {
+        alert("Please select images");
+
+        return;
+      }
+
+      setUploading(true);
+
+      // preserve EXACT order
+      const orderedFiles = images.map((img) => img.file);
+
+      const imageUrls = await uploadProductImages(orderedFiles);
+
+      setValue("productImages", imageUrls, {
+        shouldDirty: true,
+      });
+
+      alert("Images uploaded successfully");
+    } catch (error) {
+      console.error(error);
+
+      alert("Upload failed");
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -223,14 +296,17 @@ const DropzoneComponent = () => {
 
     const saveEdit = async () => {
       const newImage = await getCroppedImage(
-        images[editingIndex!],
+        images[editingIndex!].preview,
         croppedArea,
         rotation,
         zoom,
       );
 
       const updated = [...images];
-      updated[editingIndex!] = newImage;
+      updated[editingIndex!] = {
+        preview: newImage,
+        file: dataURLtoFile(newImage, `edited_${Date.now()}.webp`),
+      };
       setImages(updated);
       setEditingIndex(null);
     };
@@ -241,7 +317,7 @@ const DropzoneComponent = () => {
           {/* Crop Area */}
           <div className="relative w-full h-[250px] sm:h-80">
             <Cropper
-              image={images[editingIndex!]}
+              image={images[editingIndex!].preview}
               crop={crop}
               zoom={zoom}
               rotation={rotation}
@@ -378,6 +454,22 @@ const DropzoneComponent = () => {
       )}
 
       {editingIndex !== null && <EditorModal />}
+
+      {/* Upload Button */}
+
+      {images.length > 0 && (
+        <div className="mt-6 flex justify-end">
+          <button
+            type="button"
+            onClick={uploadImages}
+            disabled={uploading}
+            className="px-5 py-2 bg-brand-500 text-white rounded-lg
+      hover:bg-brand-600 transition disabled:opacity-50"
+          >
+            {uploading ? "Uploading..." : "Upload Images"}
+          </button>
+        </div>
+      )}
     </ComponentCard>
   );
 };

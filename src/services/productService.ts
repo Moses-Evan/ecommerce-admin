@@ -2,7 +2,7 @@ import api from "./api";
 
 // ✅ Create Product
 export const createProduct = async (data: any) => {
-  const response = await api.post("/products", data);
+  const response = await api.post("/products/create", data);
 
   return response.data;
 };
@@ -31,6 +31,29 @@ export const updateProduct = async (id: string | number, data: any) => {
 // ✅ Delete Product
 export const deleteProduct = async (id: string | number) => {
   const response = await api.delete(`/products/${id}`);
+
+  return response.data;
+};
+
+
+export const uploadProductImages = async (
+  files: File[],
+) => {
+  const formData = new FormData();
+
+  files.forEach((file) => {
+    formData.append("images", file);
+  });
+
+  const response = await api.post(
+    "/products/uploads",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    },
+  );
 
   return response.data;
 };
