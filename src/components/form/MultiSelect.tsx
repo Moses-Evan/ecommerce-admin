@@ -211,7 +211,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 
           {isOpen && (
             <div
-              className="absolute left-0 z-40 w-full overflow-y-auto bg-white rounded-lg shadow-sm top-full max-h-select dark:bg-gray-900"
+              className="absolute left-0 z-40 w-full overflow-y-auto bg-white rounded-lg shadow-sm top-full max-h-select dark:bg-gray-900 :"
               onClick={(e) => e.stopPropagation()}
               role="listbox"
               aria-label={label}
@@ -223,7 +223,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                 return (
                   <div
                     key={option.value}
-                    className={`hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800 ${
+                    className={`hover:bg-primary/5 w-full cursor-pointer rounded-t border-b border-gray-200 dark:border-gray-800 hover:bg-red-900  ${
                       isFocused ? "bg-primary/5" : ""
                     } ${isSelected ? "bg-primary/10" : ""}`}
                     onClick={() => handleSelect(option.value)}

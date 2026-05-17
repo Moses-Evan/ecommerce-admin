@@ -1,49 +1,38 @@
-import { useState } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
-import Input from "../input/InputField";
+
 import Select from "../Select";
 import MultiSelect from "../MultiSelect";
 import { Controller, useFormContext } from "react-hook-form";
 
-export default function Spec() {
-  const [color, setColor] = useState<string>("#4169E1");
-
-  const options = [
-    { value: "silk", label: "Silk" },
-    { value: "cotton", label: "Cotton" },
+export default function Properties() {
+  const optionsforPage = [
+    { value: "Summer Collection", label: "Summer Collection" },
+    { value: "Just Arrived", label: "Just Arrived" },
+    { value: "Winter Collection", label: "Winter Collection" },
   ];
 
-  const [selectedValues, setSelectedValues] = useState<string[]>([]);
-
-  const multiOptions = [
-    { value: "Wedding", text: "Wedding", selected: false },
-    { value: "Festive", text: "Festive", selected: false },
-    { value: "Ceremonies", text: "Ceremonies", selected: false },
-    { value: "Traditional", text: "Traditional", selected: false },
-    { value: "Casual", text: "Casual", selected: false },
+  const multiOptionsForBadges = [
+    { value: "New", text: "New", selected: false },
+    { value: "Bestseller", text: "Bestseller", selected: false },
   ];
 
-  const {
-    register,
-    formState: { errors },
-    control,
-  } = useFormContext();
+  const { control } = useFormContext();
 
   return (
-    <ComponentCard title="Specifications">
+    <ComponentCard title="Properties">
       <div className="space-y-6">
         <div>
-          <Label>Select Fabric Type</Label>
+          <Label>Select Category</Label>
 
           <Controller
-            name="productFabricType"
+            name="productCategory"
             control={control}
-            rules={{ required: "Fabric type is required" }}
+            rules={{ required: "Category is required" }}
             render={({ field, fieldState }) => (
               <>
                 <Select
-                  options={options}
+                  options={optionsforPage}
                   placeholder="Select an option"
                   value={field.value || ""} // ✅ important
                   onChange={field.onChange}
@@ -59,59 +48,21 @@ export default function Spec() {
             )}
           />
         </div>
-        <div>
-          <Label htmlFor="productColor">Color</Label>
-          <div className="flex gap-3 items-center">
-            <Input
-              type="text"
-              id="productColor"
-              placeholder="Ex: Royal Blue, Pink"
-              {...register("productColor", {
-                required: "Product color is required",
-              })}
-              error={!!errors.productColor}
-              hint={errors.productColor?.message as string}
-            />
-            <Input
-              type="text"
-              id="productColorCode"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-            />
-
-            <div className="relative inline-block">
-              <input
-                type="color"
-                id="productColorCode"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="absolute opacity-0 w-12 h-12 cursor-pointer"
-                placeholder="Select Color"
-              />
-
-              <label
-                htmlFor="productColorCode"
-                className="h-12 w-12 rounded-full border cursor-pointer block"
-                style={{ backgroundColor: color }}
-              ></label>
-            </div>
-          </div>
-        </div>
 
         <div className="space-y-6">
           <div>
             <Controller
-              name="productOccasion"
+              name="productBadges"
               control={control}
               rules={{
                 validate: (value) =>
-                  (value && value.length > 0) || "Select at least one occasion",
+                  (value && value.length > 0) || "Select at least one Badge",
               }}
               render={({ field, fieldState }) => (
                 <>
                   <MultiSelect
-                    label="Occasion"
-                    options={multiOptions}
+                    label="Badges"
+                    options={multiOptionsForBadges}
                     value={field.value || []} // ✅ controlled by RHF
                     onChange={field.onChange} // ✅ sync with form
                   />

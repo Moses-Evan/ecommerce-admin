@@ -7,6 +7,7 @@ import TextAreaInput from "../../components/form/form-elements/TextAreaInput";
 import PageMeta from "../../components/common/PageMeta";
 import { useForm, FormProvider } from "react-hook-form";
 import { createProduct } from "../../services/productService";
+import Properties from "../../components/form/form-elements/Properties";
 
 export default function FormElements() {
   const methods = useForm();
@@ -62,6 +63,7 @@ export default function FormElements() {
               {/* <RadioButtons /> */}
               {/* <ToggleSwitch /> */}
               <DropzoneComponent />
+              <Properties />
             </div>
           </div>
 

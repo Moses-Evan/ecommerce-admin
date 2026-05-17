@@ -106,30 +106,30 @@ export default function PriceInventory() {
 
         {/* Sale Reason */}
         <div>
-          <Label>Sale Reason</Label>
+          <Label>Select Sale Reason</Label>
 
           <Controller
             name="productSaleReason"
             control={control}
-            rules={{
-              required: "Please select a sale reason",
-            }}
-            render={({ field }) => (
-              <Select
-                options={saleReasonOptions}
-                placeholder="Select sale reason"
-                value={field.value || ""}
-                onChange={field.onChange}
-                className="dark:bg-dark-900"
-              />
+            rules={{ required: "Sale reason is required" }}
+            render={({ field, fieldState }) => (
+              <>
+                <Select
+                  options={saleReasonOptions}
+                  placeholder="Select an option"
+                  value={field.value || ""} // ✅ important
+                  onChange={field.onChange}
+                  className="dark:bg-dark-900"
+                />
+
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
             )}
           />
-
-          {errors.saleReason && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.saleReason.message as string}
-            </p>
-          )}
         </div>
 
         {/* Stock */}
