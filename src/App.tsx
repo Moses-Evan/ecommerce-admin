@@ -13,11 +13,13 @@ import LineChart from "./pages/Charts/LineChart";
 import BarChart from "./pages/Charts/BarChart";
 import Calendar from "./pages/Calendar";
 import BasicTables from "./pages/Tables/BasicTables";
-import FormElements from "./pages/Forms/FormElements";
 import Blank from "./pages/Blank";
 import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 import Home from "./pages/Dashboard/Home";
+import AddProduct from "./pages/Forms/AddProduct";
+import EditProduct from "./pages/Forms/EditProduct";
+import AddCategory from "./pages/Forms/AddCategory";
 
 export default function App() {
   return (
@@ -35,7 +37,9 @@ export default function App() {
             <Route path="/blank" element={<Blank />} />
 
             {/* Forms */}
-            <Route path="/form-elements" element={<FormElements />} />
+            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/edit-product" element={<EditProduct />} />
+            <Route path="/add-category" element={<AddCategory />} />
 
             {/* Tables */}
             <Route path="/basic-tables" element={<BasicTables />} />

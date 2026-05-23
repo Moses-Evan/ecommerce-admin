@@ -4,6 +4,7 @@ import svgr from "vite-plugin-svgr";
 
 // https://vite.dev/config/
 export default defineConfig({
+
   plugins: [
     react(),
     svgr({
@@ -14,5 +15,10 @@ export default defineConfig({
         namedExport: "ReactComponent",
       },
     }),
+    
   ],
+   server: {
+    host: "0.0.0.0",
+    allowedHosts: true,
+  }
 });

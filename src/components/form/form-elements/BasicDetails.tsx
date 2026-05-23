@@ -16,12 +16,14 @@ export default function BasicDetails() {
 
   const productTypeOptions = [
     { value: "women", label: "Women" },
-    { value: "man", label: "Man" },
+    
+    { value: "man", label: "Men" },
     { value: "kids", label: "Kids" },
     { value: "accessories", label: "Accessories" },
   ];
   const productTypeWomenOptions = [
     { value: "saree", label: "Saree" },
+    { value: "lehenga", label: "Lehenga" },
     { value: "blouse", label: "Blouse" },
     { value: "kurta", label: "Kurta" },
     { value: "dailyWear", label: "Daily Wear" },

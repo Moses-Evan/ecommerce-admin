@@ -10,6 +10,7 @@ export default function Properties() {
     { value: "Summer Collection", label: "Summer Collection" },
     { value: "Just Arrived", label: "Just Arrived" },
     { value: "Winter Collection", label: "Winter Collection" },
+    { value: "Featured", label: "Featured" },
   ];
 
   const multiOptionsForBadges = [

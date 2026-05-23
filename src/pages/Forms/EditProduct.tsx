@@ -6,11 +6,30 @@ import DropzoneComponent from "../../components/form/form-elements/DropZone";
 import TextAreaInput from "../../components/form/form-elements/TextAreaInput";
 import PageMeta from "../../components/common/PageMeta";
 import { useForm, FormProvider } from "react-hook-form";
-import { createProduct } from "../../services/productService";
+import { createProduct, getAllProducts } from "../../services/productService";
 import Properties from "../../components/form/form-elements/Properties";
+import { Product } from "../../components/types/Product";
+import { useState, useEffect } from "react";
 
-export default function FormElements() {
+export default function EditProduct() {
   const methods = useForm();
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const data = await getAllProducts();
+      console.log("Fetched products:", data);
+      setProducts(data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      console.log("Fetch products attempt completed");
+    }
+  };
 
   const onSubmit = async (data: any, event?: any) => {
     try {
@@ -43,10 +62,10 @@ export default function FormElements() {
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <PageMeta
-            title="Add Products | Niorra Admin Dashboard"
-            description="Page to add new products to the Niorra e-commerce platform. Fill in product details, specifications, pricing, inventory, and upload images to create a new product listing."
+            title="Edit Products | Niorra Admin Dashboard"
+            description="Page to edit existing products on the Niorra e-commerce platform. Update product details, specifications, pricing, inventory, and upload images to modify an existing product listing."
           />
-          <PageBreadcrumb pageTitle="Add a Product" />
+          <PageBreadcrumb pageTitle="Edit a Product" />
           <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
             <div className="space-y-6">
               <BasicDetails />
@@ -95,7 +114,7 @@ export default function FormElements() {
               value="publish"
               disabled={methods.formState.isSubmitting}
             >
-              Add Product
+              Save Changes
             </button>
           </div>
         </form>

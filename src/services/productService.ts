@@ -1,5 +1,11 @@
 import api from "./api";
 
+export const createCategory = async (data: any) => {
+  const response = await api.post("/categories", data);
+
+  return response.data;
+};
+
 // ✅ Create Product
 export const createProduct = async (data: any) => {
   const response = await api.post("/products/create", data);
@@ -35,25 +41,18 @@ export const deleteProduct = async (id: string | number) => {
   return response.data;
 };
 
-
-export const uploadProductImages = async (
-  files: File[],
-) => {
+export const uploadProductImages = async (files: File[]) => {
   const formData = new FormData();
 
   files.forEach((file) => {
     formData.append("images", file);
   });
 
-  const response = await api.post(
-    "/products/uploads",
-    formData,
-    {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
+  const response = await api.post("/products/uploads", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
     },
-  );
+  });
 
   return response.data;
 };

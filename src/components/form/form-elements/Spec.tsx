@@ -10,8 +10,8 @@ export default function Spec() {
   const [color, setColor] = useState<string>("#4169E1");
 
   const options = [
-    { value: "silk", label: "Silk" },
-    { value: "cotton", label: "Cotton" },
+    { value: "Silk", label: "Silk" },
+    { value: "Cotton", label: "Cotton" },
   ];
 
   const [selectedValues, setSelectedValues] = useState<string[]>([]);
@@ -72,29 +72,50 @@ export default function Spec() {
               error={!!errors.productColor}
               hint={errors.productColor?.message as string}
             />
-            <Input
-              type="text"
-              id="productColorCode"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
+            <Controller
+              name="productColorCode"
+              control={control}
+              defaultValue={color}
+              render={({ field, fieldState }) => (
+                <>
+                  <Input
+                    type="text"
+                    id="productColorCode"
+                    value={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.target.value);
+                      setColor(e.target.value);
+                    }}
+                  />
+
+                  <div className="relative inline-block">
+                    <input
+                      type="color"
+                      id="productColorCodePicker"
+                      value={field.value}
+                      onChange={(e) => {
+                        field.onChange(e.target.value);
+                        setColor(e.target.value);
+                      }}
+                      className="absolute opacity-0 w-12 h-12 cursor-pointer"
+                      placeholder="Select Color"
+                    />
+
+                    <label
+                      htmlFor="productColorCodePicker"
+                      className="h-12 w-12 rounded-full border cursor-pointer block"
+                      style={{ backgroundColor: field.value }}
+                    ></label>
+                  </div>
+
+                  {fieldState.error && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </>
+              )}
             />
-
-            <div className="relative inline-block">
-              <input
-                type="color"
-                id="productColorCode"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="absolute opacity-0 w-12 h-12 cursor-pointer"
-                placeholder="Select Color"
-              />
-
-              <label
-                htmlFor="productColorCode"
-                className="h-12 w-12 rounded-full border cursor-pointer block"
-                style={{ backgroundColor: color }}
-              ></label>
-            </div>
           </div>
         </div>
 
