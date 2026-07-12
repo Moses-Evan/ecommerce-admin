@@ -16,7 +16,7 @@ export default function BasicDetails() {
 
   const productTypeOptions = [
     { value: "women", label: "Women" },
-    
+
     { value: "man", label: "Men" },
     { value: "kids", label: "Kids" },
     { value: "accessories", label: "Accessories" },
@@ -39,6 +39,18 @@ export default function BasicDetails() {
     { value: "dhotiShirtSet", label: "Dhoti Shirt Set" },
     { value: "kidsFrocks", label: "Kids Frocks" },
   ];
+
+  const optionsforPage = [
+    { value: "Summer Collection", label: "Summer Collection" },
+    { value: "Just Arrived", label: "Just Arrived" },
+    { value: "Winter Collection", label: "Winter Collection" },
+    { value: "Wedding Collection", label: "Wedding Collection" },
+    { value: "Festive Collection", label: "Festive Collection" },
+    { value: "Daily Wear", label: "Daily Wear" },
+    { value: "Designer Collection", label: "Designer Collection" },
+    { value: "Premium Collection", label: "Premium Collection" },
+    { value: "Featured", label: "Featured" },
+  ];
   const productTypeAccessoriesOptions: { value: string; label: string }[] = [];
 
   const productTypeSubOptions: Record<
@@ -55,6 +67,7 @@ export default function BasicDetails() {
   const selectedSubOptions = selectedProductType
     ? (productTypeSubOptions[selectedProductType] ?? [])
     : [];
+  const selectedProductSubType = watch("productSubType");
 
   useEffect(() => {
     if (selectedProductType) {
@@ -74,69 +87,97 @@ export default function BasicDetails() {
               required: "Product name is required",
             })}
             error={!!errors.productName}
-            hint={errors.productName?.message as string}
+            helperText={errors.productName?.message}
           />
         </div>
 
-        {/* Product Type  */}
+        {/* Product Type */}
         <div>
           <Label>Product Type</Label>
-
           <Controller
             name="productType"
             control={control}
-            rules={{
-              required: "Please select a product type",
-            }}
-            render={({ field }) => (
-              <Select
-                options={productTypeOptions}
-                placeholder="Select product type"
-                value={field.value || ""}
-                onChange={field.onChange}
-                className="dark:bg-dark-900"
-              />
-            )}
-          />
-
-          {errors.productType && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.productType.message as string}
-            </p>
-          )}
-        </div>
-
-        {selectedSubOptions.length > 0 && (
-          <div>
-            <Label>Product Sub Type</Label>
-
-            <Controller
-              name="productSubType"
-              control={control}
-              rules={{
-                required: "Please select a product sub type",
-              }}
-              render={({ field }) => (
+            rules={{ required: "Product type is required" }}
+            render={({ field, fieldState }) => (
+              <>
                 <Select
-                  options={selectedSubOptions}
-                  placeholder={`Select ${selectedProductType} sub type`}
+                  options={productTypeOptions}
+                  placeholder="Select a product type"
                   value={field.value || ""}
                   onChange={field.onChange}
                   className="dark:bg-dark-900"
                 />
+                {fieldState.error && (
+                  <p className="text-red-500 text-sm mt-1">
+                    {fieldState.error.message}
+                  </p>
+                )}
+              </>
+            )}
+          />
+        </div>
+
+        {/* Product Sub Type */}
+        {selectedSubOptions.length > 0 && (
+          <div>
+            <Label>Product Sub Type</Label>
+            <Controller
+              name="productSubType"
+              control={control}
+              rules={{ required: "Product sub type is required" }}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select
+                    options={selectedSubOptions}
+                    placeholder="Select a product sub type"
+                    value={field.value || ""}
+                    onChange={field.onChange}
+                    className="dark:bg-dark-900"
+                  />
+                  {fieldState.error && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </>
               )}
             />
+          </div>
+        )}
 
-            {errors.productSubType && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.productSubType.message as string}
-              </p>
-            )}
+        {/* Category - Only show for saree or half saree */}
+        {(selectedProductSubType === "saree" ||
+          selectedProductSubType === "halfSaree") && (
+          <div>
+            <Label>Select Category</Label>
+
+            <Controller
+              name="productCategory"
+              control={control}
+              rules={{ required: "Category is required" }}
+              render={({ field, fieldState }) => (
+                <>
+                  <Select
+                    options={optionsforPage}
+                    placeholder="Select an option"
+                    value={field.value || ""} // ✅ important
+                    onChange={field.onChange}
+                    className="dark:bg-dark-900"
+                  />
+
+                  {fieldState.error && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {fieldState.error.message}
+                    </p>
+                  )}
+                </>
+              )}
+            />
           </div>
         )}
 
         <div>
-          <Label htmlFor="sku">SKU</Label>
+          <Label htmlFor="productSku">SKU</Label>
           <Input
             type="text"
             id="productSku"
@@ -144,12 +185,12 @@ export default function BasicDetails() {
               required: "SKU is required",
             })}
             error={!!errors.productSku}
-            hint={errors.productSku?.message as string}
+            helperText={errors.productSku?.message}
           />
         </div>
 
         <div>
-          <Label htmlFor="brand">Brand</Label>
+          <Label htmlFor="productBrand">Brand</Label>
           <Input
             type="text"
             id="productBrand"
@@ -157,7 +198,7 @@ export default function BasicDetails() {
               required: "Brand is required",
             })}
             error={!!errors.productBrand}
-            hint={errors.productBrand?.message as string}
+            helperText={errors.productBrand?.message}
           />
         </div>
       </div>

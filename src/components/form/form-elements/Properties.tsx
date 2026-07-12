@@ -1,18 +1,9 @@
 import ComponentCard from "../../common/ComponentCard";
-import Label from "../Label";
 
-import Select from "../Select";
 import MultiSelect from "../MultiSelect";
 import { Controller, useFormContext } from "react-hook-form";
 
 export default function Properties() {
-  const optionsforPage = [
-    { value: "Summer Collection", label: "Summer Collection" },
-    { value: "Just Arrived", label: "Just Arrived" },
-    { value: "Winter Collection", label: "Winter Collection" },
-    { value: "Featured", label: "Featured" },
-  ];
-
   const multiOptionsForBadges = [
     { value: "New", text: "New", selected: false },
     { value: "Bestseller", text: "Bestseller", selected: false },
@@ -23,33 +14,6 @@ export default function Properties() {
   return (
     <ComponentCard title="Properties">
       <div className="space-y-6">
-        <div>
-          <Label>Select Category</Label>
-
-          <Controller
-            name="productCategory"
-            control={control}
-            rules={{ required: "Category is required" }}
-            render={({ field, fieldState }) => (
-              <>
-                <Select
-                  options={optionsforPage}
-                  placeholder="Select an option"
-                  value={field.value || ""} // ✅ important
-                  onChange={field.onChange}
-                  className="dark:bg-dark-900"
-                />
-
-                {fieldState.error && (
-                  <p className="text-red-500 text-sm mt-1">
-                    {fieldState.error.message}
-                  </p>
-                )}
-              </>
-            )}
-          />
-        </div>
-
         <div className="space-y-6">
           <div>
             <Controller
