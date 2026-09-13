@@ -15,43 +15,73 @@ export default function BasicDetails() {
   } = useFormContext();
 
   const productTypeOptions = [
-    { value: "women", label: "Women" },
-
-    { value: "man", label: "Men" },
-    { value: "kids", label: "Kids" },
+    { value: "women", label: "Women Collections" },
+    { value: "man", label: "Man Collections" },
+    { value: "kids-girls", label: "Kids Girls" },
+    { value: "kids-boys", label: "Kids Boys" },
     { value: "accessories", label: "Accessories" },
   ];
   const productTypeWomenOptions = [
-    { value: "saree", label: "Saree" },
+    { value: "sarees", label: "Sarees" },
+    { value: "sale-sarees", label: "Sale Sarees" },
+    { value: "lehenga-cholli", label: "Lehenga Cholli" },
     { value: "lehenga", label: "Lehenga" },
-    { value: "blouse", label: "Blouse" },
-    { value: "kurta", label: "Kurta" },
-    { value: "dailyWear", label: "Daily Wear" },
-    { value: "halfSaree", label: "Half Saree" },
-    { value: "skirts", label: "Skirts" },
+    { value: "Chuddidhar", label: "Chuddidhar Collections" },
+    { value: "blouse-collections", label: "Blouse Collections" },
+    { value: "daily-wear-kurtas", label: "Daily Wear Kurtas" },
+    { value: "traditional-kurtas", label: "Traditional Kurtas" },
+    {
+      value: "daily-wear-dresses",
+      label: "Daily Wear Dresses - Nighty, Inners",
+    },
+    { value: "half-sarees", label: "Half Sarees" },
+    { value: "saree-skirts", label: "Saree Skirts" },
   ];
   const productTypeManOptions = [
-    { value: "sherwani", label: "Sherwani" },
-    { value: "weddingSuit", label: "Wedding Suit" },
+    { value: "sherwani-collections", label: "Sherwani Collections" },
+    { value: "shirt-collections", label: "Shirt Collections" },
+    { value: "kurtha-collections", label: "Kurtha Collections" },
+    { value: "national", label: "National" },
+    { value: "dhoti-collections", label: "Dhoti Collections" },
+    { value: "dhoti-shirt", label: "Dhoti Shirt" },
+    { value: "pant", label: "Pant" },
+    { value: "vest", label: "Vest" },
+    { value: "vest-coat", label: "Vest Coat" },
+    { value: "thalapakai", label: "Thalapakai" },
+    { value: "schesh", label: "Schesh" },
   ];
-  const productTypeKidsOptions = [
-    { value: "pattuPavadai", label: "Pattu Pavadai" },
-    { value: "dhotiShirtSet", label: "Dhoti Shirt Set" },
-    { value: "kidsFrocks", label: "Kids Frocks" },
+  const productTypeKidsGirlsOptions = [
+    { value: "kids-lehanga-cholli", label: "Lehanga Cholli" },
+    { value: "kids-chudidhar", label: "Chuddidhar" },
+    { value: "kids-pattu-pavadai", label: "Pattu Pavadai" },
+    { value: "kids-party-frock", label: "Party Frock" },
+    { value: "kids-nighty", label: "Nighty" },
+    { value: "kids-sandals", label: "Sandals" },
+  ];
+  const productTypeKidsBoysOptions = [
+    { value: "kids-sherwani-collections", label: "Sherwani Collections" },
+    { value: "kids-shirt-collections", label: "Shirt Collections" },
+    { value: "kids-kurtha-collections", label: "Kurtha Collections" },
+    { value: "kids-national", label: "National" },
+    { value: "kids-dhoti-collections", label: "Dhoti Collections" },
+    { value: "kids-dhoti-shirt", label: "Dhoti Shirt" },
+    { value: "kids-pant", label: "Pant" },
+    { value: "kids-coat-suit", label: "Coat Suit" },
+    { value: "kids-thalapakai", label: "Thalapakai" },
+    { value: "kids-schesh", label: "Schesh" },
   ];
 
   const optionsforPage = [
     { value: "Summer Collection", label: "Summer Collection" },
-    { value: "Just Arrived", label: "Just Arrived" },
     { value: "Winter Collection", label: "Winter Collection" },
-    { value: "Wedding Collection", label: "Wedding Collection" },
     { value: "Festive Collection", label: "Festive Collection" },
-    { value: "Daily Wear", label: "Daily Wear" },
     { value: "Designer Collection", label: "Designer Collection" },
-    { value: "Premium Collection", label: "Premium Collection" },
-    { value: "Featured", label: "Featured" },
   ];
-  const productTypeAccessoriesOptions: { value: string; label: string }[] = [];
+  const productTypeAccessoriesOptions = [
+    { value: "jwellery", label: "Jwellery" },
+    { value: "gift-items", label: "Gift Items" },
+    { value: "dress-materials", label: "Dress Materials" },
+  ];
 
   const productTypeSubOptions: Record<
     string,
@@ -59,7 +89,8 @@ export default function BasicDetails() {
   > = {
     women: productTypeWomenOptions,
     man: productTypeManOptions,
-    kids: productTypeKidsOptions,
+    "kids-girls": productTypeKidsGirlsOptions,
+    "kids-boys": productTypeKidsBoysOptions,
     accessories: productTypeAccessoriesOptions,
   };
 
@@ -146,8 +177,9 @@ export default function BasicDetails() {
         )}
 
         {/* Category - Only show for saree or half saree */}
-        {(selectedProductSubType === "saree" ||
-          selectedProductSubType === "halfSaree") && (
+        {(selectedProductSubType === "sarees" ||
+          selectedProductSubType === "sale-sarees" ||
+          selectedProductSubType === "half-sarees") && (
           <div>
             <Label>Select Category</Label>
 
