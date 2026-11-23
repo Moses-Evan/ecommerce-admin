@@ -21,15 +21,23 @@ import AddProduct from "./pages/Forms/AddProduct";
 import EditProduct from "./pages/Forms/EditProduct";
 import AddCategory from "./pages/Forms/AddCategory";
 import Products from "./pages/Products";
+import RequireAdmin from "./components/auth/RequireAdmin";
+import { AuthProvider } from "./context/AuthContext";
 
 export default function App() {
   return (
-    <>
+    <AuthProvider>
       <Router>
         <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <RequireAdmin>
+                <AppLayout />
+              </RequireAdmin>
+            }
+          >
             <Route index path="/" element={<Home />} />
 
             {/* Others Page */}
@@ -68,6 +76,6 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
-    </>
+    </AuthProvider>
   );
 }
