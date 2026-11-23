@@ -31,41 +31,37 @@ export default function App() {
         <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
-          <Route
-            element={
-              <RequireAdmin>
-                <AppLayout />
-              </RequireAdmin>
-            }
-          >
-            <Route index path="/" element={<Home />} />
+          <Route element={<AppLayout />}>
+            <Route element={<RequireAdmin />}>
+              <Route index path="/" element={<Home />} />
 
-            {/* Others Page */}
-            <Route path="/profile" element={<UserProfiles />} />
-            <Route path="/calendar" element={<Calendar />} />
-            <Route path="/blank" element={<Blank />} />
+              {/* Others Page */}
+              <Route path="/profile" element={<UserProfiles />} />
+              <Route path="/calendar" element={<Calendar />} />
+              <Route path="/blank" element={<Blank />} />
 
-            {/* Forms */}
-            <Route path="/add-product" element={<AddProduct />} />
-            <Route path="/products" element={<Products />} />
-            <Route path="/edit-product/:id" element={<EditProduct />} />
-            <Route path="/edit-product" element={<Products />} />
-            <Route path="/add-category" element={<AddCategory />} />
+              {/* Forms */}
+              <Route path="/add-product" element={<AddProduct />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/edit-product/:id" element={<EditProduct />} />
+              <Route path="/edit-product" element={<Products />} />
+              <Route path="/add-category" element={<AddCategory />} />
 
-            {/* Tables */}
-            <Route path="/basic-tables" element={<BasicTables />} />
+              {/* Tables */}
+              <Route path="/basic-tables" element={<BasicTables />} />
 
-            {/* Ui Elements */}
-            <Route path="/alerts" element={<Alerts />} />
-            <Route path="/avatars" element={<Avatars />} />
-            <Route path="/badge" element={<Badges />} />
-            <Route path="/buttons" element={<Buttons />} />
-            <Route path="/images" element={<Images />} />
-            <Route path="/videos" element={<Videos />} />
+              {/* Ui Elements */}
+              <Route path="/alerts" element={<Alerts />} />
+              <Route path="/avatars" element={<Avatars />} />
+              <Route path="/badge" element={<Badges />} />
+              <Route path="/buttons" element={<Buttons />} />
+              <Route path="/images" element={<Images />} />
+              <Route path="/videos" element={<Videos />} />
 
-            {/* Charts */}
-            <Route path="/line-chart" element={<LineChart />} />
-            <Route path="/bar-chart" element={<BarChart />} />
+              {/* Charts */}
+              <Route path="/line-chart" element={<LineChart />} />
+              <Route path="/bar-chart" element={<BarChart />} />
+            </Route>
           </Route>
 
           {/* Auth Layout */}
