@@ -1,124 +1,172 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
+import axios from "axios";
+import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
 import PageBreadcrumb from "../../components/common/PageBreadCrumb";
-import BasicDetails from "../../components/form/form-elements/BasicDetails";
-import Spec from "../../components/form/form-elements/Spec";
-import PriceInventory from "../../components/form/form-elements/PriceInventory";
-import DropzoneComponent from "../../components/form/form-elements/DropZone";
-import TextAreaInput from "../../components/form/form-elements/TextAreaInput";
 import PageMeta from "../../components/common/PageMeta";
-import { useForm, FormProvider } from "react-hook-form";
-import { createProduct, getAllProducts } from "../../services/productService";
+import BasicDetails from "../../components/form/form-elements/BasicDetails";
+import DropzoneComponent from "../../components/form/form-elements/DropZone";
+import PriceInventory from "../../components/form/form-elements/PriceInventory";
 import Properties from "../../components/form/form-elements/Properties";
+import Spec from "../../components/form/form-elements/Spec";
+import TextAreaInput from "../../components/form/form-elements/TextAreaInput";
 import { Product } from "../../components/types/Product";
-import { useState, useEffect } from "react";
+import {
+  getProductById,
+  updateProduct,
+} from "../../services/productService";
+
+type ProductFormValues = Omit<Product, "createdAt" | "updatedAt"> & {
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 export default function EditProduct() {
-  const methods = useForm();
-  const [products, setProducts] = useState<Product[]>([]);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const methods = useForm<ProductFormValues>();
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loadError, setLoadError] = useState("");
+  const [saveError, setSaveError] = useState("");
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    let active = true;
 
-  const fetchProducts = async () => {
-    try {
-      const data = await getAllProducts();
-      console.log("Fetched products:", data);
-      setProducts(data);
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    } finally {
-      console.log("Fetch products attempt completed");
+    if (!id) {
+      setLoadError("A product ID is required.");
+      return () => {
+        active = false;
+      };
     }
-  };
 
-  const onSubmit = async (data: any, event?: any) => {
+    getProductById(id)
+      .then((data) => {
+        if (!active) return;
+        setProduct(data);
+        methods.reset(data);
+      })
+      .catch(() => {
+        if (active) setLoadError("Product details could not be loaded.");
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [id, methods]);
+
+  const onSubmit: SubmitHandler<ProductFormValues> = async (data, event) => {
+    if (!id) return;
+    setSaveError("");
+
+    const submitter = (event?.nativeEvent as SubmitEvent | undefined)
+      ?.submitter as HTMLButtonElement | null;
+
     try {
-      const action = (event?.nativeEvent as SubmitEvent)
-        ?.submitter as HTMLButtonElement;
-
-      data.action = action?.value;
-
-      console.log("FINAL ADD PRODUCT FORM DATA:", data);
-
-      const result = await createProduct(data);
-
-      console.log("SUCCESS:", result);
-
-      alert(result);
-
-      methods.reset();
-    } catch (error: any) {
-      console.error("ERROR:", error);
-
-      alert(
-        error?.response?.data?.message ||
-          "Something went wrong while adding the product.",
+      await updateProduct(id, {
+        ...data,
+        action: submitter?.value || data.action || "draft",
+      });
+      navigate("/products");
+    } catch (error) {
+      const message =
+        axios.isAxiosError<{ message?: string }>(error) &&
+        error.response?.data?.message;
+      setSaveError(
+        message || "Changes could not be saved. Please try again.",
       );
     }
   };
 
   return (
-    <div>
-      <FormProvider {...methods}>
-        <form onSubmit={methods.handleSubmit(onSubmit)}>
-          <PageMeta
-            title="Edit Products | Niorra Admin Dashboard"
-            description="Page to edit existing products on the Niorra e-commerce platform. Update product details, specifications, pricing, inventory, and upload images to modify an existing product listing."
-          />
-          <PageBreadcrumb pageTitle="Edit a Product" />
-          <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <div className="space-y-6">
-              <BasicDetails />
-              <TextAreaInput />
-              <Spec />
-              {/* <SelectInputs /> */}
-              {/* <InputStates /> */}
-            </div>
-            <div className="space-y-6">
-              <PriceInventory />
-              {/* <InputGroup /> */}
-              {/* <FileInputExample /> */}
-              {/* <CheckboxComponents /> */}
-              {/* <RadioButtons /> */}
-              {/* <ToggleSwitch /> */}
-              <DropzoneComponent />
-              <Properties />
-            </div>
-          </div>
+    <>
+      <PageMeta
+        title="Edit Product | Niorra Admin"
+        description="Update product details, pricing, inventory, and images."
+      />
+      <PageBreadcrumb
+        pageTitle={product ? `Edit ${product.productName}` : "Edit Product"}
+      />
 
-          <div
-            className="mt-6
-           flex justify-end"
+      {!product && !loadError && (
+        <p className="py-12 text-center text-sm text-gray-500">
+          Loading product…
+        </p>
+      )}
+
+      {loadError && (
+        <div
+          role="alert"
+          className="rounded-xl border border-error-200 bg-error-50 p-5 text-sm text-error-700 dark:border-error-500/30 dark:bg-error-500/10 dark:text-error-400"
+        >
+          <p>{loadError}</p>
+          <button
+            type="button"
+            onClick={() => navigate("/products")}
+            className="mt-3 font-medium underline"
           >
-            <button
-              type="submit"
-              className="px-6 py-3 bg-brand-900 text-white rounded-lg
-              transition-all duration-200 ease-in-out
-              hover:bg-brand-800 hover:shadow-lg hover:-translate-y-0.5
-              active:scale-95
-              disabled:opacity-50 disabled:cursor-not-allowed mr-4"
-              name="action"
-              value="draft"
-              disabled={methods.formState.isSubmitting}
-            >
-              Draft Product
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-3 bg-brand-700 text-white rounded-lg
-              transition-all duration-200 ease-in-out
-              hover:bg-brand-600 hover:shadow-lg hover:-translate-y-0.5
-              active:scale-95
-              disabled:opacity-50 disabled:cursor-not-allowed"
-              name="action"
-              value="publish"
-              disabled={methods.formState.isSubmitting}
-            >
-              Save Changes
-            </button>
-          </div>
-        </form>
-      </FormProvider>
-    </div>
+            Back to products
+          </button>
+        </div>
+      )}
+
+      {product && (
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <div className="space-y-6">
+                <BasicDetails />
+                <TextAreaInput />
+                <Spec />
+              </div>
+              <div className="space-y-6">
+                <PriceInventory />
+                <DropzoneComponent
+                  key={product.id}
+                  initialImages={product.productImages ?? []}
+                />
+                <Properties />
+              </div>
+            </div>
+
+            {saveError && (
+              <p
+                role="alert"
+                className="rounded-lg bg-error-50 p-3 text-sm text-error-700 dark:bg-error-500/10 dark:text-error-400"
+              >
+                {saveError}
+              </p>
+            )}
+
+            <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={() => navigate("/products")}
+                className="min-h-11 rounded-lg border border-gray-300 px-5 text-sm font-medium text-gray-700 dark:border-gray-700 dark:text-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                name="action"
+                value="draft"
+                disabled={methods.formState.isSubmitting}
+                className="min-h-11 rounded-lg bg-gray-800 px-5 text-sm font-medium text-white disabled:opacity-50 dark:bg-gray-700"
+              >
+                Save as draft
+              </button>
+              <button
+                type="submit"
+                name="action"
+                value="publish"
+                disabled={methods.formState.isSubmitting}
+                className="min-h-11 rounded-lg bg-brand-500 px-5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50"
+              >
+                {methods.formState.isSubmitting ? "Saving…" : "Save and publish"}
+              </button>
+            </div>
+          </form>
+        </FormProvider>
+      )}
+    </>
   );
 }

@@ -11,6 +11,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  DragEndEvent,
 } from "@dnd-kit/core";
 
 import {
@@ -22,6 +23,13 @@ import {
 
 import { CSS } from "@dnd-kit/utilities";
 import Cropper from "react-easy-crop";
+import type { Area, Point } from "react-easy-crop";
+
+type ProductImage = {
+  preview: string;
+  file?: File;
+  value?: string;
+};
 
 const dataURLtoFile = (dataurl: string, filename: string) => {
   const arr = dataurl.split(",");
@@ -65,7 +73,7 @@ const convertToWebP = (file: File): Promise<string> => {
 /* -- Crop Image -- */
 const getCroppedImage = async (
   imageSrc: string,
-  crop: any,
+  crop: Area,
   rotation: number,
   zoom: number,
 ) => {
@@ -106,7 +114,17 @@ const getCroppedImage = async (
 };
 
 /* -- Sortable Item -- */
-const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
+const SortableItem = ({
+  image,
+  index,
+  removeImage,
+  openEditor,
+}: {
+  image: ProductImage;
+  index: number;
+  removeImage: (index: number) => void;
+  openEditor: (index: number) => void;
+}) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: index });
 
@@ -125,8 +143,10 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
       {/* Image */}
       <img
         src={image.preview}
-        onClick={() => openEditor(index)}
-        className="w-full aspect-[3/4] object-cover rounded-lg cursor-pointer"
+        onClick={() => image.file && openEditor(index)}
+        className={`w-full aspect-[3/4] object-cover rounded-lg ${
+          image.file ? "cursor-pointer" : ""
+        }`}
         alt={`Uploaded ${index + 1}`}
       />
 
@@ -164,13 +184,12 @@ const SortableItem = ({ image, index, removeImage, openEditor }: any) => {
 };
 
 /* -- Main Component -- */
-const DropzoneComponent = () => {
-  const [images, setImages] = useState<
-    {
-      preview: string;
-      file: File;
-    }[]
-  >([]);
+const DropzoneComponent = ({
+  initialImages,
+}: {
+  initialImages?: string[];
+}) => {
+  const [images, setImages] = useState<ProductImage[]>([]);
 
   const [uploading, setUploading] = useState(false);
 
@@ -187,11 +206,12 @@ const DropzoneComponent = () => {
     });
   }, [register]);
 
-  // useEffect(() => {
-  //   setValue("productImages", images, {
-  //     shouldDirty: true,
-  //   });
-  // }, [images, setValue]);
+  useEffect(() => {
+    if (initialImages) {
+      setImages(initialImages.map((preview) => ({ preview, value: preview })));
+      setValue("productImages", initialImages, { shouldValidate: true });
+    }
+  }, [initialImages, setValue]);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
@@ -241,16 +261,34 @@ const DropzoneComponent = () => {
     },
   });
   const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
+    const remaining = images.filter((_, i) => i !== index);
+    setImages(remaining);
+    setValue(
+      "productImages",
+      remaining.flatMap((image) => (image.value ? [image.value] : [])),
+      { shouldDirty: true, shouldValidate: true },
+    );
   };
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over) return;
+    if (
+      !over ||
+      typeof active.id !== "number" ||
+      typeof over.id !== "number"
+    ) {
+      return;
+    }
 
     if (active.id !== over.id) {
-      setImages((items) => arrayMove(items, active.id, over.id));
+      const reordered = arrayMove(images, active.id, over.id);
+      setImages(reordered);
+      setValue(
+        "productImages",
+        reordered.flatMap((image) => (image.value ? [image.value] : [])),
+        { shouldDirty: true },
+      );
     }
   };
 
@@ -265,13 +303,30 @@ const DropzoneComponent = () => {
       setUploading(true);
 
       // preserve EXACT order
-      const orderedFiles = images.map((img) => img.file);
+      const orderedFiles = images.flatMap((img) => (img.file ? [img.file] : []));
 
       const imageUrls = await uploadProductImages(orderedFiles);
 
-      setValue("productImages", imageUrls, {
-        shouldDirty: true,
-      });
+      let uploadedIndex = 0;
+      const uploadedImages = images.map((image) =>
+        image.file
+          ? {
+              preview: image.preview,
+              value: imageUrls[uploadedIndex++],
+            }
+          : image,
+      );
+      setImages(uploadedImages);
+      setValue(
+        "productImages",
+        uploadedImages.flatMap((image) =>
+          image.value ? [image.value] : [],
+        ),
+        {
+          shouldDirty: true,
+          shouldValidate: true,
+        },
+      );
 
       alert("Images uploaded successfully");
     } catch (error) {
@@ -285,16 +340,17 @@ const DropzoneComponent = () => {
 
   /* -- Editor Modal -- */
   const EditorModal = () => {
-    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [rotation, setRotation] = useState(0);
-    const [croppedArea, setCroppedArea] = useState<any>(null);
+    const [croppedArea, setCroppedArea] = useState<Area | null>(null);
 
-    const onCropComplete = useCallback((_: any, croppedAreaPixels: any) => {
+    const onCropComplete = useCallback((_: Area, croppedAreaPixels: Area) => {
       setCroppedArea(croppedAreaPixels);
     }, []);
 
     const saveEdit = async () => {
+      if (!croppedArea || editingIndex === null) return;
       const newImage = await getCroppedImage(
         images[editingIndex!].preview,
         croppedArea,
@@ -457,7 +513,7 @@ const DropzoneComponent = () => {
 
       {/* Upload Button */}
 
-      {images.length > 0 && (
+      {images.some((image) => image.file) && (
         <div className="mt-6 flex justify-end">
           <button
             type="button"
@@ -466,7 +522,7 @@ const DropzoneComponent = () => {
             className="px-5 py-2 bg-brand-500 text-white rounded-lg
       hover:bg-brand-600 transition disabled:opacity-50"
           >
-            {uploading ? "Uploading..." : "Upload Images"}
+            {uploading ? "Uploading..." : "Upload new images"}
           </button>
         </div>
       )}

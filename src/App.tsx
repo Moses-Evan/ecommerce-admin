@@ -20,6 +20,7 @@ import Home from "./pages/Dashboard/Home";
 import AddProduct from "./pages/Forms/AddProduct";
 import EditProduct from "./pages/Forms/EditProduct";
 import AddCategory from "./pages/Forms/AddCategory";
+import Products from "./pages/Products";
 
 export default function App() {
   return (
@@ -38,7 +39,9 @@ export default function App() {
 
             {/* Forms */}
             <Route path="/add-product" element={<AddProduct />} />
-            <Route path="/edit-product" element={<EditProduct />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/edit-product/:id" element={<EditProduct />} />
+            <Route path="/edit-product" element={<Products />} />
             <Route path="/add-category" element={<AddCategory />} />
 
             {/* Tables */}

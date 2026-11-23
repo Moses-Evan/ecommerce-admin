@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import ComponentCard from "../../common/ComponentCard";
 import Label from "../Label";
 import Select from "../Select";
@@ -95,15 +95,20 @@ export default function BasicDetails() {
   };
 
   const selectedProductType = watch("productType");
+  const previousProductType = useRef(selectedProductType);
   const selectedSubOptions = selectedProductType
     ? (productTypeSubOptions[selectedProductType] ?? [])
     : [];
   const selectedProductSubType = watch("productSubType");
 
   useEffect(() => {
-    if (selectedProductType) {
+    if (
+      previousProductType.current &&
+      previousProductType.current !== selectedProductType
+    ) {
       setValue("productSubType", "");
     }
+    previousProductType.current = selectedProductType;
   }, [selectedProductType, setValue]);
 
   return (
@@ -118,7 +123,7 @@ export default function BasicDetails() {
               required: "Product name is required",
             })}
             error={!!errors.productName}
-            helperText={errors.productName?.message}
+            hint={errors.productName?.message as string}
           />
         </div>
 
@@ -217,7 +222,7 @@ export default function BasicDetails() {
               required: "SKU is required",
             })}
             error={!!errors.productSku}
-            helperText={errors.productSku?.message}
+            hint={errors.productSku?.message as string}
           />
         </div>
 
@@ -230,7 +235,7 @@ export default function BasicDetails() {
               required: "Brand is required",
             })}
             error={!!errors.productBrand}
-            helperText={errors.productBrand?.message}
+            hint={errors.productBrand?.message as string}
           />
         </div>
       </div>

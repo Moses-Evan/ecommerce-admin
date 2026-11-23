@@ -17,8 +17,7 @@ interface InputProps {
   success?: boolean;
   error?: boolean;
   hint?: string;
-
-  inputmode?:string
+  inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -28,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       id,
       name,
       placeholder,
-      inputmode,
+      inputMode,
       value,
       onChange,
       className = "",
@@ -63,6 +62,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={id}
           name={name}
           placeholder={placeholder}
+          inputMode={inputMode}
           value={value}
           onChange={onChange}
           min={min}

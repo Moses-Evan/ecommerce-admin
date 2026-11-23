@@ -1,6 +1,7 @@
 export interface Product {
-  id: string;
+  id: string | number;
 
+  action: string;
   productBrand: string;
   productColor: string;
   productDescription: string;
@@ -30,6 +31,6 @@ export interface Product {
   productColorCode: string;
   productSubType: string;
   productType: string;
-  updatedAt: Date;
-  createdAt: Date;
+  updatedAt: string;
+  createdAt: string;
 }

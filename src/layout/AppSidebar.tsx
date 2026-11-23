@@ -35,9 +35,9 @@ const navItems: NavItem[] = [
     name: "Products",
     icon: <ListIcon />,
     subItems: [
+      { name: "All Products", path: "/products", pro: false },
       { name: "Add Category", path: "/add-category", pro: false },
       { name: "Add Product", path: "/add-product", pro: false },
-      { name: "Edit Product", path: "/edit-product", pro: false },
     ],
   },
   {
