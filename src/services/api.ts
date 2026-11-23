@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// export const API_ORIGIN = import.meta.env.VITE_API_ORIGIN ?? "https://api.niorra.eu";
 export const API_ORIGIN =
-  import.meta.env.VITE_API_ORIGIN ?? "http://localhost:8080";
+  import.meta.env.VITE_API_ORIGIN ?? "https://api.niorra.eu";
+// export const API_ORIGIN =import.meta.env.VITE_API_ORIGIN ?? "http://localhost:8080";
 
 let authToken: string | null = null;
 
